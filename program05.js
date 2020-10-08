@@ -1,0 +1,1 @@
+module.exports = goodUsers => submitted => submitted.every(s => goodUsers.some(u => s.id === u.id))
