@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "urllib": "^2.36.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1"
   }
 }
