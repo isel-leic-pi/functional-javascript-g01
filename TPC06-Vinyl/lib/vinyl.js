@@ -55,7 +55,7 @@ function addArtist(username, artist, cb){
         if(err) return cb(err)
         if(matches.length==0) return cb(new Error('artist '+artist+' not found'))
         users.addArtist(username, artist, (err, user)=>{
-            if(err) cb(err)
+            if(err) return cb(err)
             cb(null, user)
         })
     })

@@ -1,7 +1,4 @@
 
-
-
-const { doesNotMatch } = require('assert')
 const fs = require('fs')
 const urllib = require('urllib')
 
@@ -10,6 +7,7 @@ const LASTFM_KILLERS_TOP_TRACKS_FILE = './__tests__/data/lastfm_killers_getTopTr
 const LASTFM_NEW_ORDER_TOP_TRACKS_FILE = './__tests__/data/lastfm_new_order_getTopTracks.json'
 
 const LASTFM_FOO_FIGHTERS_SEARCH_ARTIST_FILE='./__tests__/data/lastfm_foo_fighters_searchArtist.json'
+const LASTFM_NO_RESULT_SEARCH_ARTIST_FILE='./__tests__/data/lastfm_no_result_searchArtist.json'
 
 const USERS_FILE_GET_TOP_TRACKS='./__tests__/data/vinyl_users_getTopTracks.json'
 
@@ -48,10 +46,20 @@ test('add artist of an existing artist to an existing user', done=>{
     })
 })
 
-/*test('try adding an artist that doesnt exist to an existing user', done=>{
-    
+test('try adding an artist that doesnt exist to an existing user', done=>{
+    const vinyl=require('./../lib/vinyl')(USERS_FILE_GET_TOP_TRACKS)
+    urllib.request.mockImplementationOnce((_, cb)=> fs.readFile(LASTFM_NO_RESULT_SEARCH_ARTIST_FILE, cb))
+    vinyl.addArtist('Manel','aaaassssdddd',(err, user)=>{
+        expect(err).toBeTruthy();
+        done()
+    })
 })
 
 test('try adding an existing artist to a user that doesnt exist', done=>{
-
-})*/
+    const vinyl=require('./../lib/vinyl')(USERS_FILE_GET_TOP_TRACKS)
+    urllib.request.mockImplementationOnce((_, cb)=> fs.readFile(LASTFM_FOO_FIGHTERS_SEARCH_ARTIST_FILE, cb))
+    vinyl.addArtist('Maria Papoila','Foo Fighters',(err, user)=>{
+        expect(err).toBeTruthy()
+        done()
+    })
+})
