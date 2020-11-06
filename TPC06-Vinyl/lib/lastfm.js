@@ -21,7 +21,7 @@ function getTopTracks(artist, cb) {
 }
 
 /**
- * Search for 
+ * Search for an artist
  * @param {String} artist 
  * @param {function(Error, Array)} cb 
  */
