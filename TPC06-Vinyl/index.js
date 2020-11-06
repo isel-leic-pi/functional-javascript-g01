@@ -1,7 +1,7 @@
 'use strict'
 
 const lastfm = require('./lib/lastfm')
-const users = require('./lib/users')()
+const users = require('./lib/users')
 const vinyl = require('./lib/vinyl')
 
 users.getUser('gamboa', (err, user) => {

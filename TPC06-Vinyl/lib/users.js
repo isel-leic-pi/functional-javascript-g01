@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 
-let usersPath = './data/users.json'
+const USERS_PATH = './data/users.json'
 
 /**
  * @typedef User
@@ -14,7 +14,7 @@ let usersPath = './data/users.json'
  * @param {function(Error, User)} cb 
  */
 function getUser(username, cb) {
-    fs.readFile(usersPath, (err, buffer) => {
+    fs.readFile(USERS_PATH, (err, buffer) => {
         if(err) return cb(err)
         const arr = JSON.parse(buffer)
         const selected = arr.filter(user => user.username == username)
@@ -34,7 +34,7 @@ function addUser(username, cb) {
         if (err) return cb(err);
         if (user) return cb(new Error(`User ${username} already exists!`))
         
-        fs.readFile(usersPath, (err, buffer) => {
+        fs.readFile(USERS_PATH, (err, buffer) => {
             if(err) return cb(err)
             
             const arr = JSON.parse(buffer)
@@ -43,7 +43,7 @@ function addUser(username, cb) {
                 'artists': []
             })
 
-            fs.writeFile(usersPath, JSON.stringify(arr), cb)
+            fs.writeFile(USERS_PATH, JSON.stringify(arr), cb)
         })
     })
 }
@@ -61,28 +61,22 @@ function addArtist(username, artist, cb) {
     getUser(username,(err,user) => {
         if(err) return cb(new Error(`User ${username} doesn't exists`))
         
-        fs.readFile(usersPath, (err, buffer) => {
+        fs.readFile(USERS_PATH, (err, buffer) => {
             if(err) return cb(err)
             
             const arr = JSON.parse(buffer)
             const userF = arr.find(element => element.username == username);
             userF.artists.push(artist)
             
-            fs.writeFile(usersPath, JSON.stringify(arr), (err) => {if(err) return cb(err)})
+            fs.writeFile(USERS_PATH, JSON.stringify(arr), (err) => {if(err) return cb(err)})
         })
         return cb(null,user)
         
     })
 }
 
-function init(path){
-    if(path) usersPath = path
-
-    return {
-        getUser,
-        addArtist,
-        addUser
-    }
+module.exports = {
+    getUser,
+    addArtist,
+    addUser
 }
-
-module.exports = init
