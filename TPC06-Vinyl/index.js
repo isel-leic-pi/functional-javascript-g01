@@ -1,10 +1,10 @@
 'use strict'
 
 const lastfm = require('./lib/lastfm')
-const users = require('./lib/users')
-const vinyl = require('./lib/vinyl')
+const users = require('./lib/users')()
+const vinyl = require('./lib/vinyl')()
 
-users.getUser('gamboa', (err, user) => {
+/*users.getUser('gamboa', (err, user) => {
     if (err) return console.error(err);
     console.log(user)
 })
@@ -22,15 +22,21 @@ lastfm.getTopTracks('weekend', (err, tracks) => {
 lastfm.searchArtist('muse', (err, artists) => {
     if(err) console.log(err)
     else artists.forEach(t => console.log(t))
-})
-
-/*vinyl.getTopTracks('gamboa', 5, (err, tracks) => {
-    if(err) console.log(err)
-    else tracks.forEach(t => console.log(t))
 })*/
 
-//users.addArtist('Manel', 'linkin park', (err, user) => console.log(err || user))
+/*vinyl.getTopTracks('gamboa', 2, (err, tracks) => {
+    if(err) return console.log(err)
+    tracks.forEach(t => console.log(t))
+    console.log(tracks.length)
+})*/
+
+/*lastfm.searchArtist('Foo Fighters', (err, art)=>{
+    if(err) return console.error(err)
+    console.log(art)
+})*/
+
+users.addArtist('Manel', 'linkin park', (err, user) => console.log(err || user))
 //users.getUser('gamboa', (err, user) => console.log(err || user))
-users.addUser('abc', (err, user) => console.log(err || user))
+//users.addUser('abc', (err, user) => console.log(err || user))
 //users.getUser('Manel', (err, user) => console.log(err || user))
 //

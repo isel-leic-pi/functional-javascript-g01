@@ -1,7 +1,18 @@
 'use strict'
 
 const lastfm = require('./lastfm')
-const users = require('./users')
+let users = require('./users')()
+
+
+function init(path) {
+    if(path) users = require('./users')(path)
+    return {
+        getTopTracks,
+        addArtist
+    }
+}
+
+
 
 /**
  * Returns an array with limit top tracks of each favourite artist
@@ -14,6 +25,7 @@ const users = require('./users')
 function getTopTracks(username, limit, cb) {
     users.getUser(username, (err, user)=>{
         if(err) return cb(err)
+        if(user==null) return cb(new Error('User '+ username +'does not exist'))
         let topTracks=[]
         let count=0
         user.artists.forEach(artist=>{
@@ -24,12 +36,20 @@ function getTopTracks(username, limit, cb) {
                 if(count==user.artists.length)
                     cb(null, topTracks)
             })
-            
         })
         
     })
 }
 
+/**
+ * Adds a new artist name to the array of artists of the User with 
+ * given username.
+ * I does not verify repetitions among artists.
+ * 
+ * @param {String} username 
+ * @param {String} artist 
+ * @param {function(Error, User)} cb 
+ */
 function addArtist(username, artist, cb){
     lastfm.searchArtist(artist, (err, matches)=>{
         if(err) return cb(err)
@@ -41,7 +61,4 @@ function addArtist(username, artist, cb){
     })
 }
 
-module.exports = {
-    getTopTracks,
-    addArtist
-}
+module.exports = init

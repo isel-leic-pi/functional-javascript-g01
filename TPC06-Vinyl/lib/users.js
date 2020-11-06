@@ -58,20 +58,20 @@ function addUser(username, cb) {
  * @param {function(Error, User)} cb 
  */
 function addArtist(username, artist, cb) {
-    getUser(username,(err,user) => {
-        if(err) return cb(new Error(`User ${username} doesn't exists`))
-        
-        fs.readFile(usersPath, (err, buffer) => {
-            if(err) return cb(err)
-            
-            const arr = JSON.parse(buffer)
-            const userF = arr.find(element => element.username == username);
-            userF.artists.push(artist)
-            
-            fs.writeFile(usersPath, JSON.stringify(arr), (err) => {if(err) return cb(err)})
+    fs.readFile(usersPath, (err, buffer)=>{
+        if(err) return cb(err)
+        const arr = JSON.parse(buffer)
+        const selected = arr.filter(user => user.username == username)
+        if(selected.length == 0) return cb(new Error('There is no user ' + username))
+        const newArr=arr.map(user => {
+            if(user.username == username)
+                user.artists.push(artist)
+            return user
         })
-        return cb(null,user)
-        
+        fs.writeFile(usersPath, JSON.stringify(newArr), (err)=>{
+            if(err) return cb(err)
+        })
+        cb(null, selected[0])
     })
 }
 
