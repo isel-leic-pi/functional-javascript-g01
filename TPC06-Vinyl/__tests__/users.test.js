@@ -1,24 +1,11 @@
+
 const users = require('../lib/users')('./__tests__/data/users.json')
 
-
-
 test('Get\'s user', (done) => {
-
     users.getUser('gamboa', (err,user) => {
         if(err) fail(err)
         else expect(user.username).toBe('gamboa')
-        done()
-    })
-})
-
-test('Adds user', (done) => {
-
-    users.addUser('gamboa', (err,user) => {
-        if(err) { 
-            expect(err.toString()).toBe('Error: User gamboa already exists!')
-            expect(user).toBeUndefined()
-        } else fail()
-
+        
         done()
     })
 })
