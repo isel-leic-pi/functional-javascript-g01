@@ -12,33 +12,36 @@ const users = require('./users')
  * @param {function(Error, Array)} cb 
  */
 function getTopTracks(username, limit, cb) {
-    users.getUser(username, (err, user) => {
+    users.getUser(username, (err, user)=>{
         if(err) return cb(err)
-        let artCount = user.artists.length
-        let ret = []
-        user.artists.forEach((artist) => {
-            lastfm.getTopTracks(artist, (err, tracks) => {
+        let topTracks=[]
+        let count=0
+        user.artists.forEach(artist=>{
+            lastfm.getTopTracks(artist, (err, tracks)=>{
                 if(err) return cb(err)
-                ret = ret.concat(tracks.slice(0, limit))
-                if(--artCount <= 0) return cb(null, ret)
+                topTracks=topTracks.concat(tracks.slice(0, limit))
+                count++
+                if(count==user.artists.length)
+                    cb(null, topTracks)
             })
+            
+        })
+        
+    })
+}
+
+function addArtist(username, artist, cb){
+    lastfm.searchArtist(artist, (err, matches)=>{
+        if(err) return cb(err)
+        if(matches.length==0) return cb(new Error('artist '+artist+' not found'))
+        users.addArtist(username, artist, (err, user)=>{
+            if(err) cb(err)
+            cb(null, user)
         })
     })
 }
 
-/**
- * Adds a new artist name to the array of artists of the User with 
- * given username.
- * Returns an Error both if there is not that username or there is no Artists with that name.
- * 
- * @param {*} username 
- * @param {*} artist 
- * @param {*} cb 
- */
-function addArtist(username, artist, cb) {
-
-}
-
 module.exports = {
-    addArtist, getTopTracks
+    getTopTracks,
+    addArtist
 }

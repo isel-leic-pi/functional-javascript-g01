@@ -41,7 +41,16 @@ function getUsers(cb) {
  * @param {function(Error)}
  */
 function addUser(username, cb) {
-
+    fs.readFile(usersPath, (err, buffer)=>{
+        if(err) return cb(err)
+        const arr = JSON.parse(buffer)
+        const selected = arr.filter(user => user.username == username)
+        if(selected.length != 0) return cb(new Error('User ' + username + ' already exists.'))
+        arr.push({'username': username, 'artists':[]})
+        fs.writeFile(usersPath, JSON.stringify(arr), (err)=>{
+            if(err) return cb(err)
+        })
+    })
 }
 
 /**
@@ -54,7 +63,21 @@ function addUser(username, cb) {
  * @param {function(Error, User)} cb 
  */
 function addArtist(username, artist, cb) {
-
+    fs.readFile(usersPath, (err, buffer)=>{
+        if(err) return cb(err)
+        const arr = JSON.parse(buffer)
+        const selected = arr.filter(user => user.username == username)
+        if(selected.length == 0) return cb(new Error('There is no user ' + username))
+        const newArr=arr.map(user => {
+            if(user.username == username)
+                user.artists.push(artist)
+            return user
+        })
+        fs.writeFile(usersPath, JSON.stringify(newArr), (err)=>{
+            if(err) return cb(err)
+        })
+        cb(null, selected[0])
+    })
 }
 
 function init(path) {

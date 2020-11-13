@@ -1,9 +1,10 @@
 'use strict'
 
-const vinyl = require('./../repo/vinyl')
-const users = require('./../repo/users').init()
+const vinyl = require('../repo/vinyl')
+const users = require('../repo/users').init()
 const Router = require('express').Router
 const router = Router()
+
 
 module.exports = router
 
@@ -39,4 +40,38 @@ router.get('/vinyl/users', (req, resp, next) => {
             return user
         }))
     })
+})
+
+router.put('/vinyl/users', (req, resp, next)=>{
+    const username=req.body.username
+    if(!username){
+        const err = new Error('username not provided')
+        err.status = 400
+        return next(err)
+    }
+    users.addUser(username, (err) =>{
+        if(err) {
+            err.status=500
+            return next(err) 
+        }
+        next()
+    })
+})
+
+router.post('/vinyl/users/:username', (req, resp, next)=>{
+    const username = req.params.username
+    const artist=req.body.artist
+    if(!artist){
+        const err = new Error('artist not provided')
+        err.status = 400
+        return next(err)
+    }
+    vinyl.addArtist(username, artist, (err, user)=>{
+        if(err){
+            err.status = 500
+            return next(err)
+        }
+        resp.json(user)
+    })
+
 })

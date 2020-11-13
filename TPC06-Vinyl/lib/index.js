@@ -1,6 +1,7 @@
 'use strict'
 
 const express = require('express')
+const parser = require('body-parser')
 const routes = require('./routes/routes-vinyl')
 
 if(process.argv.length > 2) {
@@ -9,7 +10,9 @@ if(process.argv.length > 2) {
 
 const app = express()
 
+app.use(parser.urlencoded({ extended: false }))
 app.use(routes)
+
 app.use((err, req, resp, next) => {
     resp.status(err.status)
     resp.json(err)
