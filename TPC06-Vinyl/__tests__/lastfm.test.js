@@ -3,7 +3,7 @@
 
 const fs = require('fs')
 const urllib = require('urllib')
-const lastfm = require('../lib/lastfm')
+const lastfm = require('../lib/repo/lastfm')
 
 const LASTFM_TOP_TRACKS_FILE = './__tests__/data/lastfm_muse_getTopTracks.json'
 const LASTFM_SEARCH_ARTIST_FILE = './__tests__/data/lastfm_led+zeppelin_searchArtist.json'

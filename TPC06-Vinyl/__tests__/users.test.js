@@ -1,5 +1,5 @@
 
-const users = require('../lib/users')('./__tests__/data/users.json')
+const users = require('../lib/repo/users').init('./__tests__/data/users.json')
 
 test('Get\'s user', (done) => {
     users.getUser('gamboa', (err,user) => {
@@ -14,7 +14,7 @@ test('Adds existing user', (done) => {
 
     users.addUser('gamboa', (err,user) => {
         if(err) { 
-            expect(err.toString()).toBe('Error: User gamboa already exists!')
+            expect(err.toString()).toBe('Error: User gamboa already exists.')
             expect(user).toBeUndefined()
         } else fail()
 
@@ -22,11 +22,11 @@ test('Adds existing user', (done) => {
     })
 })
 
-test('Adds artist', (done) => {
+/*test('Adds artist', (done) => {
 
     users.addArtist('gamboa', 'Frank Sinatra',(err,user) => {
         if(err) fail(err)
         else expect(user.artists.includes('Frank Sinatra'))
         done()
     })
-})
+})*/

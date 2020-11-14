@@ -1,7 +1,15 @@
 'use strict'
 
 const lastfm = require('./lastfm')
-const users = require('./users')
+let users = require('./users')
+
+function init(path) {
+    if(path) users = require('./users').init(path)
+    return {
+        getTopTracks,
+        addArtist
+    }
+}
 
 /**
  * Returns an array with limit top tracks of each favourite artist
@@ -14,6 +22,7 @@ const users = require('./users')
 function getTopTracks(username, limit, cb) {
     users.getUser(username, (err, user)=>{
         if(err) return cb(err)
+        if(user==null)return cb(new Error(`User ${username} doesn't exist`))
         let topTracks=[]
         let count=0
         user.artists.forEach(artist=>{
@@ -35,13 +44,12 @@ function addArtist(username, artist, cb){
         if(err) return cb(err)
         if(matches.length==0) return cb(new Error('artist '+artist+' not found'))
         users.addArtist(username, artist, (err, user)=>{
-            if(err) cb(err)
+            if(err) return cb(err)
             cb(null, user)
         })
     })
 }
 
 module.exports = {
-    getTopTracks,
-    addArtist
+    init
 }
