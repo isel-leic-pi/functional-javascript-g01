@@ -49,6 +49,7 @@ function addUser(username, cb) {
         arr.push({'username': username, 'artists':[]})
         fs.writeFile(usersPath, JSON.stringify(arr), (err)=>{
             if(err) return cb(err)
+            cb(null)
         })
     })
 }

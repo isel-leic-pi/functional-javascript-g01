@@ -54,7 +54,7 @@ router.put('/vinyl/users', (req, resp, next)=>{
             err.status=500
             return next(err) 
         }
-        next()
+        resp.json(`username ${username} added`)
     })
 })
 
